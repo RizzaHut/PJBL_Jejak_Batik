@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "5494400316",
+    "project_id": "jejak-batik-3b408",
+    "storage_bucket": "jejak-batik-3b408.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5494400316:android:92c8047af21f084f04aa39",
+        "android_client_info": {
+          "package_name": "com.example.jejak_batik"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDS93en5c8LFK4geFCuk1zvogTyTQVvoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
