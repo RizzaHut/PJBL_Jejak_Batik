@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import '../models/batik_model.dart';
-import '../../../routes/app_routes.dart';
+import '../../routes/app_routes.dart';
 
 class HomeController extends GetxController {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -15,11 +15,11 @@ class HomeController extends GetxController {
   final RxBool isLoadingPilihan = true.obs;
 
   static const Map<String, String> _docIdToRoute = {
-    'kawung': Routes.hasilKawung,
-    'parang': Routes.hasilParang,
-    'mega_mendung': Routes.hasilMegaMendung,
-    'sogan': Routes.hasilSogan,
-    'sekar_jagad': Routes.hasilSekarJagad,
+    'btk1': Routes.hasilKawung,
+    'btk2': Routes.hasilParang,
+    'btk3': Routes.hasilMegaMendung,
+    'btk4': Routes.hasilSogan,
+    'btk5': Routes.hasilSekarJagad,
   };
 
   @override
@@ -53,7 +53,7 @@ class HomeController extends GetxController {
       final snap = await _db
           .collection('users')
           .doc(uid)
-          .collection('scan_history')
+          .collection('riwayat_scan')
           .orderBy('scannedAt', descending: true)
           .limit(5)
           .get();
@@ -69,11 +69,12 @@ class HomeController extends GetxController {
           hasil.add(
             BatikModel(
               nama: bd['nama'] as String? ?? '',
-              asal: bd['asal'] as String? ?? '',
               imagePath:
                   bd['imagePath'] as String? ?? 'assets/home/$batikId.png',
               deskripsi: bd['deskripsi'] as String? ?? '',
               route: _docIdToRoute[batikId] ?? Routes.hasilKawung,
+              docId: batikId,
+              daerah: bd['daerah'] as String? ?? '',
             ),
           );
         } catch (_) {}
@@ -93,7 +94,6 @@ class HomeController extends GetxController {
           .doc('pilihan_minggu_ini')
           .get();
 
-      // Fallback ke mega_mendung jika dokumen belum ada
       final batikId = configDoc.data()?['batikId'] as String? ?? 'mega_mendung';
 
       final batikDoc = await _db.collection('batik').doc(batikId).get();
@@ -101,10 +101,11 @@ class HomeController extends GetxController {
         final bd = batikDoc.data()!;
         batikPilihan.value = BatikModel(
           nama: bd['nama'] as String? ?? '',
-          asal: bd['asal'] as String? ?? '',
+          daerah: bd['daerah'] as String? ?? '',
           imagePath: bd['imagePath'] as String? ?? 'assets/home/$batikId.png',
           deskripsi: bd['deskripsi'] as String? ?? '',
           route: _docIdToRoute[batikId] ?? Routes.hasilKawung,
+          docId: batikId,
         );
       }
     } catch (_) {
