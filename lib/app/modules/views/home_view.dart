@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../controllers/home_controller.dart';
 import '../widgets/home_banner.dart';
 import '../widgets/riwayat_scan_row.dart';
-import '../widgets/batik_pilihan_card.dart';
+import '../widgets/batik_terpopuler_card.dart';
 import '../widgets/nav_bar_bawah.dart';
 
 class HomeView extends StatelessWidget {
@@ -17,7 +15,6 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -31,12 +28,14 @@ class HomeView extends StatelessWidget {
             children: [
               const Text(
                 'Selamat Datang',
-                style: TextStyle(color: Colors.white, fontSize: 14),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               Text(
-                controller.nama.value.isEmpty
-                    ? 'ERROR 404, AKUN ANDA DIRETAS'
-                    : controller.nama.value,
+                controller.nama.value.isEmpty ? '-' : controller.nama.value,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -126,7 +125,7 @@ class HomeView extends StatelessWidget {
                     }),
                     const SizedBox(height: 35),
                     const Text(
-                      'Batik Pilihan Minggu Ini',
+                      'Batik Terpopuler',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

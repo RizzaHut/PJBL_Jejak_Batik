@@ -89,29 +89,59 @@ class HomeController extends GetxController {
 
   Future<void> _fetchBatikPilihan() async {
     try {
-      final configDoc = await _db
-          .collection('config')
-          .doc('pilihan_minggu_ini')
-          .get();
+      final usersSnap = await _db.collection('users').get();
+      final Map<String, int> frekuensi = {};
 
-      final batikId = configDoc.data()?['batikId'] as String? ?? 'mega_mendung';
+      for (final userDoc in usersSnap.docs) {
+        final riwayatSnap = await _db
+            .collection('users')
+            .doc(userDoc.id)
+            .collection('riwayat_scan')
+            .get();
 
-      final batikDoc = await _db.collection('batik').doc(batikId).get();
-      if (batikDoc.exists) {
-        final bd = batikDoc.data()!;
-        batikPilihan.value = BatikModel(
-          nama: bd['nama'] as String? ?? '',
-          daerah: bd['daerah'] as String? ?? '',
-          imagePath: bd['imagePath'] as String? ?? 'assets/home/$batikId.png',
-          deskripsi: bd['deskripsi'] as String? ?? '',
-          route: _docIdToRoute[batikId] ?? Routes.hasilKawung,
-          docId: batikId,
-        );
+        for (final rDoc in riwayatSnap.docs) {
+          final batikId = rDoc.data()['batikId'] as String? ?? '';
+          if (batikId.isEmpty) continue;
+          frekuensi[batikId] = (frekuensi[batikId] ?? 0) + 1;
+        }
       }
-    } catch (_) {
+
+      if (frekuensi.isEmpty) {
+        batikPilihan.value = null;
+        return;
+      }
+
+      final topBatikId = frekuensi.entries
+          .reduce((a, b) => a.value >= b.value ? a : b)
+          .key;
+      final batikDoc = await _db.collection('batik').doc(topBatikId).get();
+      if (!batikDoc.exists) return;
+
+      final bd = batikDoc.data()!;
+      batikPilihan.value = BatikModel(
+        docId: topBatikId,
+        nama: bd['nama'] as String? ?? '',
+        daerah: bd['daerah'] as String? ?? '',
+        imagePath: bd['imagePath'] as String? ?? '',
+        deskripsi: _getFirstDeskripsi(bd),
+        route: _docIdToRoute[topBatikId] ?? Routes.hasilKawung,
+      );
+    } catch (e) {
       batikPilihan.value = null;
     } finally {
       isLoadingPilihan.value = false;
+    }
+  }
+
+  // Helper ambil deskripsi dari detail[0].content
+  String _getFirstDeskripsi(Map<String, dynamic> bd) {
+    try {
+      final detail = bd['detail'] as List<dynamic>?;
+      if (detail == null || detail.isEmpty) return '';
+      final first = detail[0] as Map<String, dynamic>;
+      return first['content'] as String? ?? '';
+    } catch (_) {
+      return '';
     }
   }
 

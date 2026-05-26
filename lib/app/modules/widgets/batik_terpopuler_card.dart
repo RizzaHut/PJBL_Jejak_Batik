@@ -50,7 +50,7 @@ class BatikPickCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 GestureDetector(
-                  onTap: () => Get.toNamed(batik.route, arguments: batik.route),
+                  onTap: () => Get.toNamed(batik.route, arguments: batik.docId),
                   child: const Text(
                     'Baca Lebih Lanjut',
                     style: TextStyle(
