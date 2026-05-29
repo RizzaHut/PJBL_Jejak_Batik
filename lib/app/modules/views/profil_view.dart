@@ -152,19 +152,19 @@ class ProfilScreen extends StatelessWidget {
               _buildMenuItem(
                 icon: Icons.settings_outlined,
                 title: 'Pengaturan',
-                onTap: () {},
+                onTap: () => Get.toNamed(Routes.pengaturan),
               ),
               const SizedBox(height: 5),
               _buildMenuItem(
                 icon: Icons.help_outline,
                 title: 'Pusat Bantuan',
-                onTap: () {},
+                onTap: () => Get.toNamed(Routes.bantuan)  ,
               ),
               const SizedBox(height: 5),
               _buildMenuItem(
                 icon: Icons.info_outline,
                 title: 'Tentang Aplikasi',
-                onTap: () {},
+                onTap: () => Get.toNamed(Routes.tentang),
               ),
               const SizedBox(height: 5),
               _buildMenuItem(
